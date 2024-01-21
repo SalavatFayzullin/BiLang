@@ -1,0 +1,7 @@
+some-greeting-message:
+  ru:
+    - 'Добро пожаловать, дорогой игрок!'
+    - 'Чувствуй себя как дома'
+  en:
+    - 'Welcome dear player!'
+    - 'Feel yourself as in home'
