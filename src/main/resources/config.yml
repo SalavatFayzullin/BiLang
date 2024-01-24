@@ -1,7 +1,6 @@
-some-greeting-message:
-  ru:
-    - 'Добро пожаловать, дорогой игрок!'
-    - 'Чувствуй себя как дома'
-  en:
-    - 'Welcome dear player!'
-    - 'Feel yourself as in home'
+placeholders:
+  some-greeting-message:
+    en_US: 'Hello, my dear! You are from United States'
+    en_GB: 'Hello, my dear! You are from United Kingdom'
+    ru_RU: 'Привет, мой друг! Ты из России'
+default-locale: 'en_US'
