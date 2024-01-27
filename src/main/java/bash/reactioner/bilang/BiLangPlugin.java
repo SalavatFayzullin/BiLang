@@ -1,6 +1,7 @@
 package bash.reactioner.bilang;
 
 import bash.reactioner.bilang.adapters.*;
+import bash.reactioner.bilang.data.LanguageData;
 import bash.reactioner.bilang.data.LanguageRepository;
 import bash.reactioner.bilang.data.MySqlLanguageRepository;
 import bash.reactioner.bilang.menu.MenusManager;
@@ -21,7 +22,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLocaleChangeEvent;
-import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
@@ -47,7 +47,7 @@ public class BiLangPlugin extends JavaPlugin implements Listener {
     private String deleteSql;
     private LanguageRepository repository;
     private Map<String, String> locales;
-    private List<String> languages;
+    private Map<String, LanguageData> languages;
     private MenusManager menusManager;
     private String createTableSql;
     private boolean shouldCreateTableIfNotExists;
@@ -98,7 +98,12 @@ public class BiLangPlugin extends JavaPlugin implements Listener {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        languages = (List<String>) getConfig().getList("languages");
+        languages = new HashMap<>();
+        ConfigurationSection section = getConfig().getConfigurationSection("languages");
+        section.getKeys(false).forEach(lang -> {
+            ConfigurationSection section1 = section.getConfigurationSection(lang);
+            languages.put(lang, new LanguageData(section1.getString("display-name"), section1.getString("value"), section1.getString("signature")));
+        });
         menusManager = new MenusManager(this);
         getServer().getPluginManager().registerEvents(menusManager, this);
         getCommand("lang").setExecutor(this);
@@ -142,7 +147,7 @@ public class BiLangPlugin extends JavaPlugin implements Listener {
         p.closeInventory();
     }
 
-    public List<String> getLanguages() {
+    public Map<String, LanguageData> getLanguages() {
         return languages;
     }
 
@@ -192,7 +197,9 @@ public class BiLangPlugin extends JavaPlugin implements Listener {
         int renderDistance = p.getClientViewDistance() * 16;
         p.getNearbyEntities(renderDistance, renderDistance, renderDistance).forEach(entity -> {
             if (entity.getCustomName() == null) return;
-            entity.setCustomName(entity.getCustomName());
+            String temp = entity.getCustomName();
+            entity.setCustomName("");
+            entity.setCustomName(temp);
         });
     }
 
