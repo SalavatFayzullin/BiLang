@@ -28,7 +28,7 @@ public class BiLangExpansion extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "1.0";
+        return "1.1";
     }
 
     @Override
@@ -39,7 +39,7 @@ public class BiLangExpansion extends PlaceholderExpansion {
     @Override
     public @Nullable String onPlaceholderRequest(Player p, @NotNull String params) {
         if (p == null) return null;
-        String locale = (p.locale().getLanguage() + "_" + p.locale().getCountry()).toLowerCase();
+        String locale = main.getLocale(p.getName());
         Map<String, String> localedMessages = main.getPlaceholders().get(params);
         String message = localedMessages.getOrDefault(locale, localedMessages.get(main.getDefaultLocale()));
         return message;

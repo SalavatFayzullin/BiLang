@@ -1,6 +1,22 @@
 placeholders:
   some-greeting-message:
-    en_US: 'Hello, my dear! You are from United States'
-    en_GB: 'Hello, my dear! You are from United Kingdom'
-    ru_RU: 'Привет, мой друг! Ты из России'
-default-locale: 'en_US'
+    ru: 'Привет!'
+    en: 'Hello!'
+default-locale: 'ru'
+languages:
+  - ru
+  - en
+create-table-if-does-not-exist: false
+lang-command:
+  check-permission: false
+  permission: 'bilang.lang'
+sql-queries:
+  create-table: 'CREATE TABLE IF NOT EXISTS players(name VARCHAR(16) PRIMARY KEY, locale VARCHAR(4));'
+  create: 'INSERT INTO players(name, locale) VALUES(?, ?);'
+  read: 'SELECT locale FROM players WHERE name = ?;'
+  update: 'UPDATE players SET locale = ? WHERE name = ?;'
+  delete: 'DELETE FROM players WHERE name = ?;'
+db:
+  url: 'jdbc:mysql://localhost:3306/test'
+  username: 'root'
+  password: 'root'

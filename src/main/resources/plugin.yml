@@ -1,7 +1,9 @@
 name: BiLang
 main: bash.reactioner.bilang.BiLangPlugin
-version: 1.0
-api-version: 1.20
+version: 1.1
+commands:
+  lang:
+    usage: /lang
 depend:
   - ProtocolLib
   - PlaceholderAPI

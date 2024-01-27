@@ -7,14 +7,13 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedDataValue;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class EntityMetadataAdapter extends PacketAdapter {
     public EntityMetadataAdapter(Plugin plugin) {
@@ -23,17 +22,17 @@ public class EntityMetadataAdapter extends PacketAdapter {
 
     @Override
     public void onPacketSending(PacketEvent event) {
-        for (int i = 0; i < event.getPacket().getDataValueCollectionModifier().size(); i++) {
-            for (int j = 0; j < event.getPacket().getDataValueCollectionModifier().read(i).size(); j++) {
-                if (event.getPacket().getDataValueCollectionModifier().read(i).get(j).getIndex() == 2) {
-                    Optional<?> optional = (Optional<?>) event.getPacket().getDataValueCollectionModifier().read(i).get(j).getValue();
-                    if (optional.isPresent() && optional.get() instanceof WrappedChatComponent name) {
-                        String content = name.getJson();
-                        content = PlaceholderAPI.setPlaceholders(event.getPlayer(), content);
-                        event.getPacket().getDataValueCollectionModifier().read(i).get(j).setValue(Optional.of(WrappedChatComponent.fromJson(content)));
-                    }
-                }
+        for (int j = 0; j < event.getPacket().getWatchableCollectionModifier().size(); j++) {
+            List<WrappedWatchableObject> objects = event.getPacket().getWatchableCollectionModifier().read(j);
+            for (int i = 0; i < objects.size(); i++) {
+                WrappedWatchableObject object = objects.get(i);
+                if (object.getIndex() != 2) continue;
+                Optional op = (Optional) objects.get(i).getValue();
+                if (!op.isPresent()) continue;
+                String json = PlaceholderAPI.setPlaceholders(event.getPlayer(), ((WrappedChatComponent) op.get()).getJson());
+                object.setValue(Optional.of(WrappedChatComponent.fromJson(json)));
             }
         }
+
     }
 }
